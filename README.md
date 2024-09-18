@@ -10,6 +10,10 @@ cd AttmNet
 cd mamba
 python setup.py install
 ```
+# Install monai
+```python 
+pip install monai
+```
 # train
 ```python
 CUDA_VISIBLE_DEVICES=1 python train.py --arch AttmNet --dataset BUS --input_w 128 --input_h 128 --name BUS_AttmNet  --data_dir .../inputs/
