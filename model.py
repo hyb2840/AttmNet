@@ -190,20 +190,7 @@ class MLC(nn.Module):
         x = self.proj4(x)
         x = self.norm4(x)
         x = self.nonliner4(x)
-        '''
-        x_s = x.reshape(B, C, H * W).contiguous()
-        x_shift_r = x_s.transpose(1, 2)
-        x = self.fc1(x_shift_r)
-        x = self.dwconv(x, H, W) 
         
-        x = x.view(B, H, W, C).permute(0, 3, 1, 2) 
-        x = self.proj4(x)
-        x = self.norm4(x)
-        x = self.nonliner4(x) 
-        x = self.proj(x)
-        x = self.norm(x)
-        x = self.nonliner4(x)   
-        '''
         return x + x_residual
 
 class DWConv(nn.Module):
