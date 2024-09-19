@@ -130,7 +130,6 @@ class Att_MambaLayer(nn.Module):
         
         x = x.view(B, H, W, C).permute(0, 3, 1, 2)
         
-        # 残差连接
         out = x + x_skip
 
         return out
@@ -354,13 +353,12 @@ class MAMEncoder(nn.Module):
                 norm_layer = getattr(self, f'norm{i}')
                 x_out = norm_layer(x)
                 B, C, H, W = x.shape
-                # 获取 x_out 的形状
                # print(f"norm layer {i} output: {x_out.shape}")
-                x_out = x_out.permute(0, 2, 3, 1).reshape(B, H*W, C)  # 调整形状为 (B, N, C)
+                x_out = x_out.permute(0, 2, 3, 1).reshape(B, H*W, C) 
                # print(f"reshaped x_out before shiftmlp: {x_out.shape}")
-                x_out = self.mlps[i](x_out, H, W)  # 传递给 shiftmlp
+                x_out = self.mlps[i](x_out, H, W)  
                
-                x_out = x_out.view(B, H, W, C).permute(0, 3, 1, 2)  # 恢复形状为 (B, C, H, W)
+                x_out = x_out.view(B, H, W, C).permute(0, 3, 1, 2) 
                # print(f"reshaped x_out after shiftmlp: {x_out.shape}")
                 outs.append(x_out)
 
@@ -373,7 +371,7 @@ class MAMEncoder(nn.Module):
 class UNetUpBlockWithInterpolation(nn.Module):
     def __init__(self, in_channels, out_channels, skip_channels):
         super(UNetUpBlockWithInterpolation, self).__init__()
-        # 使用1x1卷积调整通道数
+        # Use 1x1 convolution to adjust the number of channels.
         self.reduce_channels = nn.Conv2d(in_channels + skip_channels, in_channels, kernel_size=1)
         self.conv = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
@@ -385,7 +383,7 @@ class UNetUpBlockWithInterpolation(nn.Module):
     def forward(self, x, skip):
         x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
         x = torch.cat((x, skip), dim=1)
-        x = self.reduce_channels(x)  # 调整通道数
+        x = self.reduce_channels(x)  
         x = self.conv(x)
         return x
               
@@ -457,7 +455,6 @@ class AttmNet(nn.Module):
             res_block=res_block,
         )
 
-        # 使用skip_channels参数实例化decoder
         self.decoder5 = UNetUpBlockWithInterpolation(hidden_size, feat_size[3], feat_size[3])
         self.decoder4 = UNetUpBlockWithInterpolation(feat_size[3], feat_size[2], feat_size[2])
         self.decoder3 = UNetUpBlockWithInterpolation(feat_size[2], feat_size[1], feat_size[1])
