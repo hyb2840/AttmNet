@@ -47,12 +47,12 @@ def indicators(output, target):
     #hd_ = hd(output_, target_)
     if np.sum(output_) == 0 or np.sum(target_) == 0:
         print("Warning: One of the arrays is empty. Skipping HD calculation.")
-        hd_ = 0  # 或者设置为一个默认值
+        hd_ = 0  
     else:
         hd_ = hd(output_, target_)
     if np.sum(output_) == 0 or np.sum(target_) == 0:
         print("Warning: One of the arrays is empty. Skipping HD calculation.")
-        hd95_ = 0  # 或者设置为一个默认值
+        hd95_ = 0  
     else:
         hd95_ = hd95(output_, target_)
 
