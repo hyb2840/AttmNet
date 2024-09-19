@@ -44,7 +44,6 @@ def indicators(output, target):
 
     iou_ = jc(output_, target_)
     dice_ = dc(output_, target_)
-    #hd_ = hd(output_, target_)
     if np.sum(output_) == 0 or np.sum(target_) == 0:
         print("Warning: One of the arrays is empty. Skipping HD calculation.")
         hd_ = 0  
