@@ -1,5 +1,6 @@
 # AttmNet
-![1](https://github.com/user-attachments/assets/ac671668-c7b6-4be1-bda7-10abe6627ba8)
+![1](https://github.com/user-attachments/assets/234c9f6e-3c17-4b41-b6ee-40de509e5f6d)
+
 # Environment install
 ```python 
 git clone https://github.com/hyb2840/AttmNet.git
