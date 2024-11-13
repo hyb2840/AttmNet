@@ -85,7 +85,6 @@ class Att_MambaLayer(nn.Module):
         x_skip = x
         assert C == self.dim
         n_tokens = x.shape[2:].numel()
-        img_dims = x.shape[2:]
         x_flat = x.transpose(1, 2).reshape(B, C, H, W)
         x_conv = self.proj1(x_flat)
         x_conv = x_conv.reshape(B, C, n_tokens).transpose(-1, -2)
@@ -112,13 +111,10 @@ class Att_MambaLayer(nn.Module):
         x_mamba = self.mamba(x_attention_output)
         
         x_mamba = x_mamba.transpose(1, 2).reshape(B, C, H, W)
-        # Apply projection and non-linearity
         x_mamba = self.proj1(x_mamba)
-        #x_mamba = self.norm1(x_mamba)
         x_mamba = self.nonliner(x_mamba)
         
         x_mamba = self.proj2(x_mamba)
-        #x_mamba = self.norm1(x_mamba)
         x = self.nonliner(x_mamba)
         
         x_s = x.reshape(B, C, H * W).contiguous()
@@ -126,10 +122,7 @@ class Att_MambaLayer(nn.Module):
         x = self.fc1(x_shift_r)
         x = self.dwconv(x, H, W) 
         
-        x = x.view(B, H, W, C).permute(0, 3, 1, 2)
-        
-        out = x + x_skip
-
+        out = x.view(B, H, W, C).permute(0, 3, 1, 2)
         return out
 
 class MLC(nn.Module):
