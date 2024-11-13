@@ -1,5 +1,7 @@
 # AttmNet
-![1](https://github.com/user-attachments/assets/234c9f6e-3c17-4b41-b6ee-40de509e5f6d)
+
+![1](https://github.com/user-attachments/assets/e58fd538-7de4-4c6c-aca9-fcce0ed2fa03)
+![2](https://github.com/user-attachments/assets/c36a42a7-7419-4f6c-8d3e-1c652f6eba56)
 
 # Environment install
 ```python 
