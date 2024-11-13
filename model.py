@@ -54,8 +54,6 @@ class Att_MambaLayer(nn.Module):
         self.proj2 = nn.Conv2d(dim, dim, 1, 1, 0)
         self.norm = nn.LayerNorm(dim)
         self.nonliner = nn.ReLU()
-        self.nonliner1 = nn.SiLU()
-        self.skip_scale= nn.Parameter(torch.ones(1))
 
         assert dim % 2 == 0, "dim must be divisible by 2 for height and width splitting"
 
@@ -67,8 +65,8 @@ class Att_MambaLayer(nn.Module):
 
         self.out_proj = nn.Linear(dim, dim)
         
-        self.norm1 = nn.InstanceNorm2d(dim)
-        self.norm2 = nn.InstanceNorm2d(dim)
+        self.norm1 = nn.LayerNorm(dim)
+        self.norm2 = nn.LayerNorm(dim)
         
         self.fc1 = nn.Linear(dim, dim) 
         self.dwconv = DWConv(dim)         
@@ -139,30 +137,24 @@ class MLC(nn.Module):
         super().__init__()
        
         self.proj = nn.Conv2d(in_channles, in_channles, 3, 1, 1)
-        self.norm = nn.InstanceNorm2d(in_channles)
+        self.norm = nn.LayerNorm(in_channles)
         self.nonliner = nn.ReLU()
 
         self.proj2 = nn.Conv2d(in_channles, in_channles, 3, 1, 1)
-        self.norm2 = nn.InstanceNorm2d(in_channles)
+        self.norm2 = nn.LayerNorm(in_channles)
         self.nonliner2 = nn.ReLU()
 
         self.proj3 = nn.Conv2d(in_channles, in_channles, 1, 1, 0)
-        self.norm3 = nn.InstanceNorm2d(in_channles)
+        self.norm3 = nn.LayerNorm(in_channles)
         self.nonliner3 = nn.ReLU()
 
         self.proj4 = nn.Conv2d(in_channles, in_channles, 1, 1, 0)
-        self.norm4 = nn.InstanceNorm2d(in_channles)
+        self.norm4 = nn.LayerNorm(in_channles)
         self.nonliner4 = nn.ReLU() 
-        
-        self.nonliner5 = nn.SiLU()
-        self.fc1 = nn.Linear(in_channles, in_channles) 
-        self.act = nn.GELU()
-        self.dwconv = DWConv(in_channles) 
-           
 
     def forward(self, x):
 
-        x_residual = x 
+        x_skip = x 
         B, C, H, W = x.shape
 
         x1 = self.proj(x)
@@ -184,13 +176,13 @@ class MLC(nn.Module):
         x = x1 + x2
         
         x = self.proj(x)
-        #x = self.norm(x)
         x = self.nonliner(x)
+        
         x = self.proj4(x)
         x = self.norm4(x)
         x = self.nonliner4(x)
         
-        return x + x_residual
+        return x + x_skip
 
 class DWConv(nn.Module):
     def __init__(self, dim):
