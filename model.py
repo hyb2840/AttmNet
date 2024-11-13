@@ -122,7 +122,8 @@ class Att_MambaLayer(nn.Module):
         x = self.fc1(x_shift_r)
         x = self.dwconv(x, H, W) 
         
-        out = x.view(B, H, W, C).permute(0, 3, 1, 2)
+        x = x.view(B, H, W, C).permute(0, 3, 1, 2)
+        out = x + x_skip
         return out
 
 class MLC(nn.Module):
