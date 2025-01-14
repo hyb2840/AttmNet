@@ -65,9 +65,6 @@ class Att_MambaLayer(nn.Module):
 
         self.out_proj = nn.Linear(dim, dim)
         
-        self.norm1 = nn.LayerNorm(dim)
-        self.norm2 = nn.LayerNorm(dim)
-        
         self.fc1 = nn.Linear(dim, dim) 
         self.dwconv = DWConv(dim)         
         # Mamba Block
@@ -131,19 +128,19 @@ class MLC(nn.Module):
         super().__init__()
        
         self.proj = nn.Conv2d(in_channles, in_channles, 3, 1, 1)
-        self.norm = nn.LayerNorm(in_channles)
+        self.norm = nn.InstanceNorm2d(in_channles)
         self.nonliner = nn.ReLU()
 
         self.proj2 = nn.Conv2d(in_channles, in_channles, 3, 1, 1)
-        self.norm2 = nn.LayerNorm(in_channles)
+        self.norm2 = nn.InstanceNorm2d(in_channles)
         self.nonliner2 = nn.ReLU()
 
         self.proj3 = nn.Conv2d(in_channles, in_channles, 1, 1, 0)
-        self.norm3 = nn.LayerNorm(in_channles)
+        self.norm3 = nn.InstanceNorm2d(in_channles)
         self.nonliner3 = nn.ReLU()
 
         self.proj4 = nn.Conv2d(in_channles, in_channles, 1, 1, 0)
-        self.norm4 = nn.LayerNorm(in_channles)
+        self.norm4 = nn.InstanceNorm2d(in_channles)
         self.nonliner4 = nn.ReLU() 
 
     def forward(self, x):
